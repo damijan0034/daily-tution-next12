@@ -3,26 +3,38 @@ import Link from "next/link";
 import React from "react";
 import Author from "./_child/author";
 
+import getPost from "@/lib/helper";
+import fetcher from "@/lib/fetcher";
+import Spinner from "./_child/spinner";
+import Error from "./_child/error";
+
 export default function Section2() {
+ const{data,isLoading,isError}=fetcher('api/posts')
+
+ if(isLoading) return <div><Spinner></Spinner></div>
+ if(isError) return <Error></Error>
+    
+ 
+
   return (
     <section className="container mx-auto  md:px-20 py-10">
       <h1 className="font-bold text-4xl py-12 text-center">Post title</h1>
 
       {/*grid*/}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
-        {Post()}
-        {Post()}
-        {Post()}
-        {Post()}
-        {Post()}
-        {Post()}
+      {
+                data.map((value, index) => (
+                    <Post data={value} key={index}></Post>
+                ))
+            }
         
         </div>
     </section>
   );
 }
 
-function Post() {
+function Post({data}) {
+  const{id,category,description,img,published,author,title}=data
   return (
     <div className="item">
       <div className="images">
@@ -31,17 +43,17 @@ function Post() {
             className="rounded"
             width={500}
             height={350}
-            src="/images/img1.png"
+            src={img || "/"}
           />
         </Link>
       </div>
       <div className="info py-4 flex flex-col justify-center">
         <div className="cat">
           <Link className="text-orange-600 hover:text-orange-800" href={"/"}>
-            Business.Travel
+            {category || "Unknown"}
           </Link>
           <Link className="text-gray-800 hover:text-gray-600" href={"/"}>
-            July3.2022
+            {published}
           </Link>
         </div>
         <div className="title ">
@@ -49,7 +61,7 @@ function Post() {
             className="text-xl font-bold hover:text-gray-600 text-gray-800 xl:text-6xl"
             href={"/"}
           >
-            Your most unhappy customers are your greatest source of learning
+            {title}
           </Link>
         </div>
         <p className="text-gray-500 py-3 text-sm">
