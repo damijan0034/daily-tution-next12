@@ -4,9 +4,24 @@ import Format from '@/components/layout/format'
 import Image from 'next/image'
 import React from 'react'
 import getPost from '@/lib/helper'
+import fetcher from '@/lib/fetcher'
+import Spinner from '@/components/_child/spinner'
+import Error from '@/components/_child/error'
+import {useRouter} from 'next/router'
 
-export default function Page(posts) {
-    const{author,img,id,title,subtitle,description}=posts
+export default function Page(){
+    const router=useRouter()
+    const{postId}=router.query
+    const{data,isLoading,isError}=fetcher(`api/posts/${postId}`)
+
+    if(isLoading)return <Spinner></Spinner>
+    if(isError)return <Error></Error>
+
+    return <Article {...data}></Article>
+}
+
+ function Article({author,img,id,title,subtitle,description}) {
+    
   return (
     
         <Format>

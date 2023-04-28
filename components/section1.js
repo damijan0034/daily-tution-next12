@@ -58,7 +58,7 @@ function Slide({data}){
   return(
     <div className='grid md:grid-cols-2'>
         <div className='image'>
-          <Link href='/'>
+          <Link href={`posts/${data.id}`}>
             <Image width={600} height={600} src={data.img} />
           </Link>
             
